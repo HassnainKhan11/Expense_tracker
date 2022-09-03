@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hive_app/provider/theme_provider.dart';
 import 'package:flutter_hive_app/provider/transaction_provider.dart';
 import 'package:flutter_hive_app/widgets/transaction_dialog.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +11,9 @@ Widget buildContent(List<Transaction> transactions) {
     return const Center(
       child: Text(
         'No expensess yet',
-        style: TextStyle(fontSize: 24),
+        style: TextStyle(
+          fontSize: 24,
+        ),
       ),
     );
   } else {
@@ -20,7 +23,8 @@ Widget buildContent(List<Transaction> transactions) {
             ? previousValue - transaction.amount
             : previousValue + transaction.amount);
     final netExpenseString = '\$${netExpense.toStringAsFixed(2)}';
-    final color = netExpense > 0 ? Colors.green : Colors.red;
+    final color =
+        netExpense > 0 ? const Color.fromARGB(255, 55, 155, 58) : Colors.red;
 
     return Column(
       children: [
@@ -92,17 +96,31 @@ Widget buildTransaction(
   BuildContext context,
   Transaction transaction,
 ) {
-  final color = transaction.isExpense ? Colors.red : Colors.green;
+  final color =
+      transaction.isExpense ? Colors.red : const Color.fromARGB(255, 0, 198, 7);
   final date = DateFormat.yMMMd().format(transaction.createDate);
+  final themeProvider = Provider.of<ThemeProvider>(context);
   return Card(
-    color: Colors.white,
+    elevation: 0,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+    color: themeProvider.isDarkMode
+        ? const Color.fromARGB(255, 244, 241, 255)
+        : const Color.fromARGB(255, 38, 0, 75),
     child: ExpansionTile(
       title: Text(
         transaction.name,
         maxLines: 2,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Theme.of(context).primaryColor),
       ),
-      subtitle: Text(date),
+      subtitle: Text(
+        date,
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
+        ),
+      ),
       trailing: Text(
         transaction.amount.toString(),
         style: TextStyle(

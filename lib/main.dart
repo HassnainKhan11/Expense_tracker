@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hive_app/provider/theme_provider.dart';
 import 'package:flutter_hive_app/provider/transaction_provider.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -28,14 +29,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: ((context) => TransactionProvider()))
-      ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: title,
-        home: HomePage(),
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(create: ((context) => TransactionProvider())),
+          ChangeNotifierProvider(create: ((context) => ThemeProvider())),
+        ],
+        builder: (context, _) {
+          final themeProvider = Provider.of<ThemeProvider>(context);
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            themeMode: themeProvider.themeMode,
+            theme: MyThemes.lightTheme,
+            darkTheme: MyThemes.darkTheme,
+            title: title,
+            home: const HomePage(),
+          );
+        });
   }
 }
